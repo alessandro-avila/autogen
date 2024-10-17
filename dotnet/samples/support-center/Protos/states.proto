@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package supportcenter;
+
+option csharp_namespace = "SupportCenter.Shared";
+
+message QnAState {
+    string user_id = 1;
+}
+
+message InvoiceState {
+    string user_id = 1;
+    string invoice_id = 2;
+}
+

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package supportcenter;
+
+option csharp_namespace = "SupportCenter.Shared";
+
+message UserChatInput {
+  string user_id = 1;
+  string user_message = 2;
+}
+
+message UserConnected {
+  string user_id = 1;
+}
+
+message QnARequested {
+  string user_id = 1;
+  string user_message = 2;
+}
+
+message QnAResponse {
+  string user_id = 1;
+  string message = 2;
+}
