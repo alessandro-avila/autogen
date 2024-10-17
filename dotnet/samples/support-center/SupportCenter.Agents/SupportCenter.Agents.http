@@ -1,0 +1,6 @@
+@SupportCenter.Agents_HostAddress = http://localhost:5233
+
+GET {{SupportCenter.Agents_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
