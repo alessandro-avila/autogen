@@ -2,16 +2,17 @@
 #pragma warning disable SKEXP0050
 using System.Text.Json;
 using Azure.AI.OpenAI;
-using SupportCenter.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Connectors.AzureAISearch;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Memory;
 using OpenAI;
+using SupportCenter.Options;
+using SupportCenter.Shared.Options;
 
 namespace SupportCenter.Shared;
 public static class SemanticKernelHostingExtensions

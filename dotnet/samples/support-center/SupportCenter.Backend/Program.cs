@@ -10,7 +10,7 @@ builder.ConfigureSemanticKernel();
 
 builder.Services.AddHttpClient();
 builder.Services.AddControllers();
-//builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 builder.AddAgentWorker(builder.Configuration["AGENT_HOST"]!)
     .AddAgent<SignalRAgent>("signalr-hub");

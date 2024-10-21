@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  
   <ItemGroup>
     <ProjectReference Include="..\SupportCenter.ServiceDefaults\SupportCenter.ServiceDefaults.csproj" />
     <ProjectReference Include="..\SupportCenter.Shared\SupportCenter.Shared.csproj" />
@@ -14,6 +15,10 @@
   <ItemGroup>
     <Folder Include="Agents\" />
     <Folder Include="Hubs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 
 </Project>
