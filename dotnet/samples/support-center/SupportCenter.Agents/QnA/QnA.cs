@@ -1,6 +1,6 @@
 using SupportCenter.Shared;
-using Microsoft.AutoGen.Agents.Abstractions;
-using Microsoft.AutoGen.Agents.Client;
+using Microsoft.AutoGen.Abstractions;
+using Microsoft.AutoGen.Agents;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Memory;
 
@@ -8,7 +8,7 @@ namespace SupportCenter.Agents;
 
 [TopicSubscription("default")]
 public class QnA(IAgentContext context, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ILogger<QnA> logger)
-    : AiAgent<QnAState>(context, memory, kernel, typeRegistry),
+    : SKAiAgent<QnAState>(context, memory, kernel, typeRegistry),
     IHandle<QnARequested>
 {
     public async Task Handle(QnARequested item)

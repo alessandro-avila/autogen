@@ -1,7 +1,7 @@
-using Microsoft.AutoGen.Agents.Client;
+using Microsoft.AutoGen.Agents;
 using SupportCenter.Backend.Agents;
-using SupportCenter.Shared;
 using SupportCenter.Backend.Hubs;
+using SupportCenter.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 

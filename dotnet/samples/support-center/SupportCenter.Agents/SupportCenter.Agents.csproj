@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Microsoft.AutoGen\Abstractions\Microsoft.AutoGen.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\src\Microsoft.AutoGen\Agents\Microsoft.AutoGen.Agents.csproj" />
     <ProjectReference Include="..\SupportCenter.ServiceDefaults\SupportCenter.ServiceDefaults.csproj" />
     <ProjectReference Include="..\SupportCenter.Shared\SupportCenter.Shared.csproj" />
   </ItemGroup>

@@ -8,8 +8,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportCenter.ServiceDefaul
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportCenter.AgentHost", "SupportCenter.AgentHost\SupportCenter.AgentHost.csproj", "{0C32C0F2-33DE-46ED-AB14-09FB05C9B144}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AutoGen.Agents.Runtime", "..\..\src\Microsoft.AutoGen.Agents\Runtime\Microsoft.AutoGen.Agents.Runtime.csproj", "{42FAAD4B-DE90-4645-8703-AEFC20C9606D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3A7E9FCC-5148-4073-9BEE-0946E5537F01}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportCenter.Backend", "SupportCenter.Backend\SupportCenter.Backend.csproj", "{253D7B9D-C8BF-4B90-B563-5E89AF709D63}"
@@ -18,7 +16,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportCenter.Shared", "Sup
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportCenter.Agents", "SupportCenter.Agents\SupportCenter.Agents.csproj", "{D0134A19-0E28-4D13-80CE-6DC293A20AA5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AutoGen.Agents.Client", "..\..\src\Microsoft.AutoGen.Agents\Client\Microsoft.AutoGen.Agents.Client.csproj", "{21779341-F3DF-4D85-8FAF-7735246FF1A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AutoGen.Runtime", "..\..\src\Microsoft.AutoGen\Runtime\Microsoft.AutoGen.Runtime.csproj", "{14E66665-AE3F-41FC-A0DA-B19565612DE9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AutoGen.ServiceDefaults", "..\..\src\Microsoft.AutoGen\ServiceDefaults\Microsoft.AutoGen.ServiceDefaults.csproj", "{80B81E00-08BE-48C6-AE94-A38B3D1B0842}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AutoGen.Abstractions", "..\..\src\Microsoft.AutoGen\Abstractions\Microsoft.AutoGen.Abstractions.csproj", "{D966C870-29CB-4D9F-9AE8-D596DA082B92}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AutoGen.Agents", "..\..\src\Microsoft.AutoGen\Agents\Microsoft.AutoGen.Agents.csproj", "{39578B99-A4D9-4F8B-8F9C-253F4E6E51EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AutoGen.Extensions.SemanticKernel", "..\..\src\Microsoft.AutoGen\Extensions\SemanticKernel\Microsoft.AutoGen.Extensions.SemanticKernel.csproj", "{6B403802-235C-48DB-9228-0B9C0E301772}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,10 +44,6 @@ Global
 		{0C32C0F2-33DE-46ED-AB14-09FB05C9B144}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C32C0F2-33DE-46ED-AB14-09FB05C9B144}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C32C0F2-33DE-46ED-AB14-09FB05C9B144}.Release|Any CPU.Build.0 = Release|Any CPU
-		{42FAAD4B-DE90-4645-8703-AEFC20C9606D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42FAAD4B-DE90-4645-8703-AEFC20C9606D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42FAAD4B-DE90-4645-8703-AEFC20C9606D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42FAAD4B-DE90-4645-8703-AEFC20C9606D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{253D7B9D-C8BF-4B90-B563-5E89AF709D63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{253D7B9D-C8BF-4B90-B563-5E89AF709D63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{253D7B9D-C8BF-4B90-B563-5E89AF709D63}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -54,17 +56,36 @@ Global
 		{D0134A19-0E28-4D13-80CE-6DC293A20AA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0134A19-0E28-4D13-80CE-6DC293A20AA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0134A19-0E28-4D13-80CE-6DC293A20AA5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{21779341-F3DF-4D85-8FAF-7735246FF1A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{21779341-F3DF-4D85-8FAF-7735246FF1A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{21779341-F3DF-4D85-8FAF-7735246FF1A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{21779341-F3DF-4D85-8FAF-7735246FF1A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14E66665-AE3F-41FC-A0DA-B19565612DE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14E66665-AE3F-41FC-A0DA-B19565612DE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14E66665-AE3F-41FC-A0DA-B19565612DE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14E66665-AE3F-41FC-A0DA-B19565612DE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80B81E00-08BE-48C6-AE94-A38B3D1B0842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80B81E00-08BE-48C6-AE94-A38B3D1B0842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80B81E00-08BE-48C6-AE94-A38B3D1B0842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80B81E00-08BE-48C6-AE94-A38B3D1B0842}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D966C870-29CB-4D9F-9AE8-D596DA082B92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D966C870-29CB-4D9F-9AE8-D596DA082B92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D966C870-29CB-4D9F-9AE8-D596DA082B92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D966C870-29CB-4D9F-9AE8-D596DA082B92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39578B99-A4D9-4F8B-8F9C-253F4E6E51EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39578B99-A4D9-4F8B-8F9C-253F4E6E51EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39578B99-A4D9-4F8B-8F9C-253F4E6E51EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39578B99-A4D9-4F8B-8F9C-253F4E6E51EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B403802-235C-48DB-9228-0B9C0E301772}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B403802-235C-48DB-9228-0B9C0E301772}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B403802-235C-48DB-9228-0B9C0E301772}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B403802-235C-48DB-9228-0B9C0E301772}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{42FAAD4B-DE90-4645-8703-AEFC20C9606D} = {3A7E9FCC-5148-4073-9BEE-0946E5537F01}
-		{21779341-F3DF-4D85-8FAF-7735246FF1A0} = {3A7E9FCC-5148-4073-9BEE-0946E5537F01}
+		{14E66665-AE3F-41FC-A0DA-B19565612DE9} = {3A7E9FCC-5148-4073-9BEE-0946E5537F01}
+		{80B81E00-08BE-48C6-AE94-A38B3D1B0842} = {3A7E9FCC-5148-4073-9BEE-0946E5537F01}
+		{D966C870-29CB-4D9F-9AE8-D596DA082B92} = {3A7E9FCC-5148-4073-9BEE-0946E5537F01}
+		{39578B99-A4D9-4F8B-8F9C-253F4E6E51EE} = {3A7E9FCC-5148-4073-9BEE-0946E5537F01}
+		{6B403802-235C-48DB-9228-0B9C0E301772} = {3A7E9FCC-5148-4073-9BEE-0946E5537F01}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64156B06-F14F-46DC-92CB-89438369403E}

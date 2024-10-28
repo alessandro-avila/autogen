@@ -1,7 +1,7 @@
-﻿using SupportCenter.Shared;
+using SupportCenter.Shared;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.AutoGen.Agents.Client;
-using Microsoft.AutoGen.Agents.Abstractions;
+using Microsoft.AutoGen.Agents;
+using Microsoft.AutoGen.Abstractions;
 
 namespace SupportCenter.Backend.Hubs;
 public class SupportCenterHub(AgentClient client) : Hub<ISupportCenterHub>
