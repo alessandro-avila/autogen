@@ -1,11 +1,10 @@
-﻿namespace SupportCenter.Options
+namespace SupportCenter.Shared.Options;
+
+public class CosmosDbOptions
 {
-    public class CosmosDbOptions
-    {
-        public string? AccountUri { get; set; }
+    public string? AccountUri { get; set; }
 
-        public string? AccountKey { get; set; }
+    public string? AccountKey { get; set; }
 
-        public IEnumerable<CosmosDbContainerOptions>? Containers { get; set; }
-    }
+    public IEnumerable<CosmosDbContainerOptions>? Containers { get; set; }
 }

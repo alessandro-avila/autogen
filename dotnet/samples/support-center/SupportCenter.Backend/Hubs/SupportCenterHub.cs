@@ -1,12 +1,11 @@
-using SupportCenter.Shared;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.AutoGen.Agents;
 using Microsoft.AutoGen.Abstractions;
+using Microsoft.AutoGen.Agents;
+using SupportCenter.Shared;
 
 namespace SupportCenter.Backend.Hubs;
-public class SupportCenterHub(AgentClient client) : Hub<ISupportCenterHub>
+public class SupportCenterHub(AgentWorker client) : Hub<ISupportCenterHub>
 {
-   
     public override async Task OnConnectedAsync()
     {
         await base.OnConnectedAsync();
