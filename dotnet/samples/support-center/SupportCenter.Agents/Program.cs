@@ -1,6 +1,6 @@
-using SupportCenter.Agents;
 using SupportCenter.Shared;
 using Microsoft.AutoGen.Agents;
+using SupportCenter.Agents.QnA;
 
 var builder = WebApplication.CreateBuilder(args);
 

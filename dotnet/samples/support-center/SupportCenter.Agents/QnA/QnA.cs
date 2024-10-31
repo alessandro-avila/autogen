@@ -4,7 +4,7 @@ using Microsoft.AutoGen.Agents;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Memory;
 
-namespace SupportCenter.Agents;
+namespace SupportCenter.Agents.QnA;
 
 [TopicSubscription("default")]
 public class QnA(IAgentContext context, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ILogger<QnA> logger)
@@ -28,10 +28,10 @@ public class QnA(IAgentContext context, Kernel kernel, ISemanticTextMemory memor
     private async Task SendQnAResponse(string message, string userId)
     {
         var qnaresponse = new QnAResponse
-        {            
+        {
             Message = message,
             UserId = userId
-        }.ToCloudEvent(this.AgentId.Key);
+        }.ToCloudEvent(AgentId.Key);
 
         await PublishEvent(qnaresponse);
     }

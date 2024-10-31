@@ -75,6 +75,7 @@
     <PackageVersion Include="Microsoft.SemanticKernel.Connectors.AzureAISearch" Version="1.25.0-preview" />
     <PackageVersion Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="$(MicrosoftSemanticKernelVersion)" />
     <PackageVersion Include="Microsoft.SemanticKernel.Connectors.Qdrant" Version="$(MicrosoftSemanticKernelExperimentalVersion)" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Planners.OpenAI" Version="1.25.0-preview" />
     <PackageVersion Include="Microsoft.SemanticKernel.Plugins.Memory" Version="$(MicrosoftSemanticKernelExperimentalVersion)" />
     <PackageVersion Include="Microsoft.SemanticKernel.Plugins.Web" Version="$(MicrosoftSemanticKernelExperimentalVersion)" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />

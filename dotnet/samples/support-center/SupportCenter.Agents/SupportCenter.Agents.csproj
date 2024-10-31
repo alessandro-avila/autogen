@@ -9,8 +9,18 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Microsoft.AutoGen\Abstractions\Microsoft.AutoGen.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\src\Microsoft.AutoGen\Agents\Microsoft.AutoGen.Agents.csproj" />
+    <ProjectReference Include="..\SupportCenter.Backend\SupportCenter.Backend.csproj" />
     <ProjectReference Include="..\SupportCenter.ServiceDefaults\SupportCenter.ServiceDefaults.csproj" />
     <ProjectReference Include="..\SupportCenter.Shared\SupportCenter.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Invoice\" />
+    <Folder Include="Dispatcher\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SemanticKernel.Planners.OpenAI" />
   </ItemGroup>
 
 </Project>

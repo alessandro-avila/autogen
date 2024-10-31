@@ -13,7 +13,7 @@ public class SupportCenterHub(AgentWorker client) : Hub<ISupportCenterHub>
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        SignalRConnectionsDB.ConnectionIdByUser.TryRemove(Context.ConnectionId, out _);
+        SignalRConnectionsDB.ConnectionByUser.TryRemove(Context.ConnectionId, out _);
         await base.OnDisconnectedAsync(exception);
     }
 
@@ -29,30 +29,37 @@ public class SupportCenterHub(AgentWorker client) : Hub<ISupportCenterHub>
 
         var evt = new UserChatInput { UserId = frontEndMessage.UserId, UserMessage = frontEndMessage.Message };
 
-        await client.PublishEventAsync(evt.ToCloudEvent(frontEndMessage.UserId));
+        await client.PublishEventAsync(evt.ToCloudEvent(frontEndMessage.UserId)).ConfigureAwait(false);
     }
 
-    public async Task ConnectToAgent(string userId)
+    public async Task RestartConversation(string userId, string conversationId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(userId, nameof(userId));
+        ArgumentException.ThrowIfNullOrWhiteSpace(conversationId, nameof(conversationId));
+
+        string? oldConversationId = SignalRConnectionsDB.GetConversationId(userId);
+
+        SignalRConnectionsDB.ConnectionByUser.AddOrUpdate(
+            userId,
+            key => new Connection(Context.ConnectionId, conversationId),
+            (key, oldValue) => new Connection(connectionId: oldValue.Id, conversationId));
+
+        var evt = new UserNewConversation { UserId = userId };
+        await client.PublishEventAsync(evt.ToCloudEvent(userId)).ConfigureAwait(false);
+    }
+
+    public async Task ConnectToAgent(string userId, string conversationId)
     {
         ArgumentNullException.ThrowIfNull(userId);
+        ArgumentNullException.ThrowIfNull(conversationId);
         ArgumentNullException.ThrowIfNull(client);
 
-        var frontEndMessage = new FrontEndMessage()
-        {
-            UserId = userId,
-            Message = "Connected to agents",
-            Agent = AgentTypes.Chat.ToString()
-        };
-
-        SignalRConnectionsDB.ConnectionIdByUser.AddOrUpdate(userId, Context.ConnectionId, (key, oldValue) => Context.ConnectionId);
+        SignalRConnectionsDB.ConnectionByUser.AddOrUpdate(
+            userId, new Connection(Context.ConnectionId, conversationId),
+            (key, oldValue) => new Connection(Context.ConnectionId, conversationId));
 
         // Notify the agents that a new user got connected.
-        var data = new Dictionary<string, string>
-        {
-            ["UserId"] = frontEndMessage.UserId,
-            ["userMessage"] = frontEndMessage.Message,
-        };
         var evt = new UserConnected { UserId = userId };
-        await client.PublishEventAsync(evt.ToCloudEvent(userId));
+        await client.PublishEventAsync(evt.ToCloudEvent(userId)).ConfigureAwait(false);
     }
 }

@@ -4,6 +4,17 @@ package supportcenter;
 
 option csharp_namespace = "SupportCenter.Shared";
 
+message CustomerInfoState {
+    CustomerInfoInternal info = 1;
+}
+
+message CustomerInfoInternal {
+    string name = 1;
+    string email = 2;
+    string phone = 3;
+    string address = 4;
+}
+
 message QnAState {
     string user_id = 1;
 }

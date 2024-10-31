@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.AspNetCore.SignalR;
 
@@ -8,13 +8,15 @@ public class SignalRService(IHubContext<SupportCenterHub> hubContext) : ISignalR
 {
     public async Task SendMessageToSpecificClient(string userId, string message, AgentTypes agentType)
     {
-        var connectionId = SignalRConnectionsDB.ConnectionIdByUser[userId];
+        var connectionId = SignalRConnectionsDB.GetConversationId(userId) ?? throw new Exception("ConnectionId not found");
         var frontEndMessage = new FrontEndMessage()
         {
+            Id = Guid.NewGuid().ToString(),
+            ConversationId = connectionId,
             UserId = userId,
             Message = message,
-            Agent = agentType.ToString()
+            Sender = agentType.ToString()
         };
-        await hubContext.Clients.Client(connectionId).SendAsync("ReceiveMessage", frontEndMessage);
+        await hubContext.Clients.Client(connectionId).SendAsync("ReceiveMessage", frontEndMessage).ConfigureAwait(false);
     }
 }

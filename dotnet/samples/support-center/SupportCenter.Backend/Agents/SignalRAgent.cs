@@ -9,15 +9,20 @@ using Google.Protobuf.WellKnownTypes;
 namespace SupportCenter.Backend.Agents;
 
 [TopicSubscription("default")]
-public class SignalRAgent(IAgentContext context, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ISignalRService signalRClient)
-    : SKAiAgent<Empty>(context, memory, kernel, typeRegistry),
+
+public class SignalRAgent(
+    IAgentContext context,
+    Kernel kernel,
+    ISemanticTextMemory memory, [
+    FromKeyedServices("EventTypes")] EventTypes typeRegistry,
+    ISignalRService signalRClient): SKAiAgent<Empty>(context, memory, kernel, typeRegistry),
     IHandle<QnAResponse>
 {
     public async Task Handle(QnAResponse item)
     {
-        string? userId = item.UserId;
-        string? message = item.Message;
+        var userId = item.UserId;
+        var message = item.Message;
 
-        await signalRClient.SendMessageToSpecificClient(userId, message, Hubs.AgentTypes.QnA);
+        await signalRClient.SendMessageToSpecificClient(userId, message, Hubs.AgentTypes.QnA).ConfigureAwait(false);
     }
 }
