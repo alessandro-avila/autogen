@@ -17,10 +17,7 @@ public class CustomerInfo(IAgentContext context, Kernel kernel, ISemanticTextMem
 {
     public async Task Handle(CustomerInfoRequested item)
     {
-        var scs = item.GetAgentData();
-        var userId = scs.UserId;
-        var message = scs.UserMessage;
-        var id = scs.Id;
+        var (id, userId, message) = item.GetAgentData();
 
         logger.LogInformation("[{Agent}]:[{EventType}]:[{EventData}]", nameof(CustomerInfo), typeof(CustomerInfoRequested), item);
 

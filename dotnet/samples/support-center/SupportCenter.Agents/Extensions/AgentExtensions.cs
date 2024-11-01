@@ -7,7 +7,7 @@ namespace SupportCenter.Agents.Extensions;
 
 public static class AgentExtensions
 {
-    public static SupportCenterData GetAgentData(this CustomerInfoRequested item)
+    public static (string id, string userId, string userMessage) GetAgentData(this CustomerInfoRequested item)
     {
         var userId = item.UserId;
         var userMessage = item.Message;
@@ -15,8 +15,6 @@ public static class AgentExtensions
         var conversationId = SignalRConnectionsDB.GetConversationId(userId) ?? item.ConversationId;
         var id = $"{userId}/{conversationId}";
 
-        return new SupportCenterData(id, userId, userMessage);
+        return (id, userId, userMessage);
     }
-
-    public record SupportCenterData(string Id, string UserId, string UserMessage);
 }

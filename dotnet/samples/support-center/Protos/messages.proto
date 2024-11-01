@@ -4,10 +4,12 @@ package supportcenter;
 
 option csharp_namespace = "SupportCenter.Shared";
 
+// Agent
+
 // User
 message UserChatInput {
   string user_id = 1;
-  string user_message = 2;
+  string message = 2;
 }
 
 message UserConnected {
@@ -35,11 +37,26 @@ message CustomerInfoNotification {
     string message = 2;
 }
 
+// Invoice
+message InvoiceRequested {
+    string user_id = 1;
+    string message = 2;
+}
+
+message InvoiceResponse {
+    string user_id = 1;
+    string message = 2;
+}
+
+message InvoiceNotification {
+    string user_id = 1;
+    string message = 2;
+}
 
 // QnA
 message QnARequested {
   string user_id = 1;
-  string user_message = 2;
+  string message = 2;
 }
 
 message QnAResponse {

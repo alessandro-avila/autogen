@@ -27,7 +27,7 @@ public class SupportCenterHub(AgentWorker client) : Hub<ISupportCenterHub>
         ArgumentNullException.ThrowIfNull(frontEndMessage);
         ArgumentNullException.ThrowIfNull(client);
 
-        var evt = new UserChatInput { UserId = frontEndMessage.UserId, UserMessage = frontEndMessage.Message };
+        var evt = new UserChatInput { UserId = frontEndMessage.UserId, Message = frontEndMessage.Message };
 
         await client.PublishEventAsync(evt.ToCloudEvent(frontEndMessage.UserId)).ConfigureAwait(false);
     }

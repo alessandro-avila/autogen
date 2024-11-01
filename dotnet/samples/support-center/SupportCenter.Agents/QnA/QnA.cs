@@ -13,9 +13,9 @@ public class QnA(IAgentContext context, Kernel kernel, ISemanticTextMemory memor
 {
     public async Task Handle(QnARequested item)
     {
-        logger.LogInformation($"[{nameof(QnA)}] Event {nameof(QnARequested)}. Text: {{Text}}", item.UserMessage);
+        logger.LogInformation($"[{nameof(QnA)}] Event {nameof(QnARequested)}. Text: {{Text}}", item.Message);
 
-        var context = new KernelArguments { ["input"] = AppendChatHistory(item.UserMessage) };
+        var context = new KernelArguments { ["input"] = AppendChatHistory(item.Message) };
         var answer = await CallFunction(QnAPrompts.QnAGenericPrompt, context);
         if (answer.Contains("NOTFORME", StringComparison.InvariantCultureIgnoreCase))
         {

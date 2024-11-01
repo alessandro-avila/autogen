@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Invoice\" />
     <Folder Include="Dispatcher\" />
   </ItemGroup>
 
