@@ -1,11 +1,9 @@
-// TODO: Reimplement using ACA Sessions
-// using DevTeam.Events;
-// using Microsoft.AutoGen.Abstractions;
-// using Microsoft.AutoGen.Agents;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Sandbox.cs
 
 // namespace DevTeam.Backend;
 
-// public sealed class Sandbox : AgentBase
+// public sealed class Sandbox : Agent
 // {
 //     private const string ReminderName = "SandboxRunReminder";
 //     private readonly IManageAzure _azService;
@@ -52,7 +50,7 @@
 //             if (await _azService.IsSandboxCompleted(sandboxId))
 //             {
 //                 await _azService.DeleteSandbox(sandboxId);
-//                 await PublishEvent(new Event
+//                 await PublishEventAsync(new Event
 //                 {
 //                     Namespace = this.GetPrimaryKeyString(),
 //                     Type = nameof(GithubFlowEventType.SandboxRunFinished),

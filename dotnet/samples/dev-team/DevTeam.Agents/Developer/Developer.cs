@@ -1,14 +1,18 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Developer.cs
+
 using DevTeam.Shared;
-using Microsoft.AutoGen.Abstractions;
 using Microsoft.AutoGen.Agents;
+using Microsoft.AutoGen.Contracts;
+using Microsoft.AutoGen.Core;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Memory;
 
 namespace DevTeam.Agents;
 
 [TopicSubscription("devteam")]
-public class Dev(IAgentContext context, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ILogger<Dev> logger)
-    : SKAiAgent<DeveloperState>(context, memory, kernel, typeRegistry), IDevelopApps,
+public class Dev(IAgentWorker worker, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ILogger<Dev> logger)
+    : SKAiAgent<DeveloperState>(worker, memory, kernel, typeRegistry), IDevelopApps,
     IHandle<CodeGenerationRequested>,
     IHandle<CodeChainClosed>
 {
@@ -21,8 +25,8 @@ public class Dev(IAgentContext context, Kernel kernel, ISemanticTextMemory memor
             Repo = item.Repo,
             IssueNumber = item.IssueNumber,
             Code = code
-        }.ToCloudEvent(this.AgentId.Key);
-        await PublishEvent(evt);
+        };
+        await PublishMessageAsync(evt);
     }
 
     public async Task Handle(CodeChainClosed item)
@@ -32,8 +36,8 @@ public class Dev(IAgentContext context, Kernel kernel, ISemanticTextMemory memor
         var evt = new CodeCreated
         {
             Code = lastCode
-        }.ToCloudEvent(this.AgentId.Key);
-        await PublishEvent(evt);
+        };
+        await PublishMessageAsync(evt);
     }
 
     public async Task<string> GenerateCode(string ask)

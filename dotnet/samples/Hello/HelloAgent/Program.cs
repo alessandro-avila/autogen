@@ -1,59 +1,62 @@
-// Copyright (c) Microsoft. All rights reserved.
-
-using Microsoft.AutoGen.Abstractions;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Program.cs
 using Microsoft.AutoGen.Agents;
+using Microsoft.AutoGen.Contracts;
+using Microsoft.AutoGen.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-// send a message to the agent
+var local = true;
+if (Environment.GetEnvironmentVariable("AGENT_HOST") != null) { local = false; }
 var app = await AgentsApp.PublishMessageAsync("HelloAgents", new NewMessageReceived
 {
     Message = "World"
-}, local: false);
-
+}, local: local).ConfigureAwait(false);
 await app.WaitForShutdownAsync();
 
 namespace Hello
 {
-    [TopicSubscription("HelloAgents")]
+    [TopicSubscription("agents")]
     public class HelloAgent(
-        IAgentContext context,
-        [FromKeyedServices("EventTypes")] EventTypes typeRegistry) : AgentBase(
-            context,
+        IAgentWorker worker, IHostApplicationLifetime hostApplicationLifetime,
+        [FromKeyedServices("EventTypes")] EventTypes typeRegistry) : Agent(
+            worker,
             typeRegistry),
             ISayHello,
             IHandleConsole,
             IHandle<NewMessageReceived>,
-            IHandle<ConversationClosed>
+            IHandle<ConversationClosed>,
+            IHandle<Shutdown>
     {
         public async Task Handle(NewMessageReceived item)
         {
             var response = await SayHello(item.Message).ConfigureAwait(false);
-            var evt = new Output
-            {
-                Message = response
-            }.ToCloudEvent(this.AgentId.Key);
-            await PublishEvent(evt).ConfigureAwait(false);
+            var evt = new Output { Message = response };
+            await PublishMessageAsync(evt).ConfigureAwait(false);
             var goodbye = new ConversationClosed
             {
-                UserId = this.AgentId.Key,
+                UserId = this.AgentId.Type,
                 UserMessage = "Goodbye"
-            }.ToCloudEvent(this.AgentId.Key);
-            await PublishEvent(goodbye).ConfigureAwait(false);
+            };
+            await PublishMessageAsync(goodbye).ConfigureAwait(false);
         }
         public async Task Handle(ConversationClosed item)
         {
             var goodbye = $"*********************  {item.UserId} said {item.UserMessage}  ************************";
-            var evt = new Output
+            var evt = new Output { Message = goodbye };
+            await PublishMessageAsync(evt).ConfigureAwait(true);
+            if (Environment.GetEnvironmentVariable("STAY_ALIVE_ON_GOODBYE") != "true")
             {
-                Message = goodbye
-            }.ToCloudEvent(this.AgentId.Key);
-            await PublishEvent(evt).ConfigureAwait(false);
-            //sleep
-            await Task.Delay(10000).ConfigureAwait(false);
-            await AgentsApp.ShutdownAsync().ConfigureAwait(false);
-
+                await PublishMessageAsync(new Shutdown()).ConfigureAwait(false);
+            }
         }
+
+        public async Task Handle(Shutdown item)
+        {
+            Console.WriteLine("Shutting down...");
+            hostApplicationLifetime.StopApplication();
+        }
+
         public async Task<string> SayHello(string ask)
         {
             var response = $"\n\n\n\n***************Hello {ask}**********************\n\n\n\n";

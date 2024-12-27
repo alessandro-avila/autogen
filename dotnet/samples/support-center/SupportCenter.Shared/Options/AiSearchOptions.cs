@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// AiSearchOptions.cs
+
 using System.ComponentModel.DataAnnotations;
 
 namespace SupportCenter.Options;

@@ -1,14 +1,18 @@
-using SupportCenter.Shared;
-using Microsoft.AutoGen.Abstractions;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// QnA.cs
+
 using Microsoft.AutoGen.Agents;
+using Microsoft.AutoGen.Contracts;
+using Microsoft.AutoGen.Core;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Memory;
+using SupportCenter.Shared;
 
 namespace SupportCenter.Agents.QnA;
 
 [TopicSubscription("default")]
-public class QnA(IAgentContext context, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ILogger<QnA> logger)
-    : SKAiAgent<QnAState>(context, memory, kernel, typeRegistry),
+public class QnA(IAgentWorker worker, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ILogger<QnA> logger)
+    : SKAiAgent<QnAState>(worker, memory, kernel, typeRegistry),
     IHandle<QnARequested>
 {
     public async Task Handle(QnARequested item)
@@ -33,6 +37,6 @@ public class QnA(IAgentContext context, Kernel kernel, ISemanticTextMemory memor
             UserId = userId
         }.ToCloudEvent(AgentId.Key);
 
-        await PublishEvent(qnaresponse);
+        await PublishEventAsync(qnaresponse);
     }
 }

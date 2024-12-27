@@ -1,4 +1,5 @@
-// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// FrontEndMessage.cs
 
 namespace SupportCenter.Backend.Hubs;
 

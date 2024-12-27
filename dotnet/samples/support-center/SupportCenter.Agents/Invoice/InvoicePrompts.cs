@@ -1,4 +1,5 @@
-// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// InvoicePrompts.cs
 
 namespace SupportCenter.Agents.Invoice;
 

@@ -1,15 +1,17 @@
-// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Invoice.cs
 
 using global::SupportCenter.Shared;
-using Microsoft.AutoGen.Abstractions;
 using Microsoft.AutoGen.Agents;
+using Microsoft.AutoGen.Contracts;
+using Microsoft.AutoGen.Core;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Memory;
 
 namespace SupportCenter.Agents.Invoice;
 [TopicSubscription("default")]
-public class Invoice(IAgentContext context, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ILogger<Invoice> logger)
-    : SKAiAgent<InvoiceState>(context, memory, kernel, typeRegistry),
+public class Invoice(IAgentWorker worker, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ILogger<Invoice> logger)
+    : SKAiAgent<InvoiceState>(worker, memory, kernel, typeRegistry),
     IHandle<InvoiceRequested>
 {
     public async Task Handle(InvoiceRequested item)
@@ -24,7 +26,7 @@ public class Invoice(IAgentContext context, Kernel kernel, ISemanticTextMemory m
             UserId = userId,
             Message = "Please wait while I look up the details for invoice..."
         };
-        await PublishEvent(notif.ToCloudEvent(AgentId.ToString())).ConfigureAwait(false);
+        await PublishEventAsync(notif.ToCloudEvent(AgentId.ToString())).ConfigureAwait(false);
 
         var querycontext = new KernelArguments { ["input"] = AppendChatHistory(message) };
         var instruction = "Consider the following knowledge:!invoices!";
@@ -36,6 +38,6 @@ public class Invoice(IAgentContext context, Kernel kernel, ISemanticTextMemory m
             UserId = userId,
             Message = answer
         };
-        await PublishEvent(response.ToCloudEvent(AgentId.ToString())).ConfigureAwait(false);
+        await PublishEventAsync(response.ToCloudEvent(AgentId.ToString())).ConfigureAwait(false);
     }
 }

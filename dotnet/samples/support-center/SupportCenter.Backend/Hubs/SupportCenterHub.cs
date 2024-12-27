@@ -1,10 +1,13 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// SupportCenterHub.cs
+
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.AutoGen.Abstractions;
-using Microsoft.AutoGen.Agents;
+using Microsoft.AutoGen.Contracts;
+using Microsoft.AutoGen.Core;
 using SupportCenter.Shared;
 
 namespace SupportCenter.Backend.Hubs;
-public class SupportCenterHub(AgentWorker client) : Hub<ISupportCenterHub>
+public class SupportCenterHub(IAgentWorker client) : Hub<ISupportCenterHub>
 {
     public override async Task OnConnectedAsync()
     {
@@ -29,7 +32,8 @@ public class SupportCenterHub(AgentWorker client) : Hub<ISupportCenterHub>
 
         var evt = new UserChatInput { UserId = frontEndMessage.UserId, Message = frontEndMessage.Message };
 
-        await client.PublishEventAsync(evt.ToCloudEvent(frontEndMessage.UserId)).ConfigureAwait(false);
+        await client.PublishEventAsync(evt.ToCloudEvent(frontEndMessage.UserId))
+            .ConfigureAwait(false);
     }
 
     public async Task RestartConversation(string userId, string conversationId)

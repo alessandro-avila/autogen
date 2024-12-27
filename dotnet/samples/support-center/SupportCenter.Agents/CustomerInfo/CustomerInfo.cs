@@ -1,8 +1,10 @@
-// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// CustomerInfo.cs
 
 using global::SupportCenter.Shared;
-using Microsoft.AutoGen.Abstractions;
 using Microsoft.AutoGen.Agents;
+using Microsoft.AutoGen.Contracts;
+using Microsoft.AutoGen.Core;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Memory;
 using Microsoft.SemanticKernel.Planning;
@@ -10,8 +12,8 @@ using SupportCenter.Agents.Extensions;
 
 namespace SupportCenter.Agents.CustomerInfo;
 [TopicSubscription("default")]
-public class CustomerInfo(IAgentContext context, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ILogger<CustomerInfo> logger)
-    : SKAiAgent<CustomerInfoState>(context, memory, kernel, typeRegistry),
+public class CustomerInfo(IAgentWorker worker, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ILogger<CustomerInfo> logger)
+    : SKAiAgent<CustomerInfoState>(worker, memory, kernel, typeRegistry),
     IHandle<CustomerInfoRequested>,
     IHandle<UserNewConversation>
 {
@@ -26,7 +28,7 @@ public class CustomerInfo(IAgentContext context, Kernel kernel, ISemanticTextMem
             UserId = userId,
             Message = "I'm working on the user's request..."
         };
-        await PublishEvent(notif.ToCloudEvent(AgentId.ToString())).ConfigureAwait(false);
+        await PublishEventAsync(notif.ToCloudEvent(AgentId.ToString())).ConfigureAwait(false);
 
         // Get the customer info via the planners.
         var prompt = CustomerInfoPrompts.GetCustomerInfo
@@ -48,7 +50,7 @@ public class CustomerInfo(IAgentContext context, Kernel kernel, ISemanticTextMem
             UserId = userId,
             Message = result.FinalAnswer
         };
-        await PublishEvent(response.ToCloudEvent(AgentId.ToString())).ConfigureAwait(false);
+        await PublishEventAsync(response.ToCloudEvent(AgentId.ToString())).ConfigureAwait(false);
     }
 
     public async Task Handle(UserNewConversation item)

@@ -1,11 +1,10 @@
 from dataclasses import dataclass
-from typing import List, Protocol, Sequence, runtime_checkable
+from typing import Any, AsyncGenerator, Mapping, Protocol, Sequence, Tuple, runtime_checkable
 
-from autogen_core.base import CancellationToken
+from autogen_core import CancellationToken
 
-from ..messages import ChatMessage, InnerMessage
-from ._task import TaskResult, TaskRunner
-from ._termination import TerminationCondition
+from ..messages import AgentEvent, ChatMessage
+from ._task import TaskRunner
 
 
 @dataclass(kw_only=True)
@@ -15,8 +14,9 @@ class Response:
     chat_message: ChatMessage
     """A chat message produced by the agent as the response."""
 
-    inner_messages: List[InnerMessage] | None = None
-    """Inner messages produced by the agent."""
+    inner_messages: Sequence[AgentEvent | ChatMessage] | None = None
+    """Inner messages produced by the agent, they can be :class:`AgentEvent`
+    or :class:`ChatMessage`."""
 
 
 @runtime_checkable
@@ -37,20 +37,30 @@ class ChatAgent(TaskRunner, Protocol):
         ...
 
     @property
-    def produced_message_types(self) -> List[type[ChatMessage]]:
-        """The types of messages that the agent produces."""
+    def produced_message_types(self) -> Tuple[type[ChatMessage], ...]:
+        """The types of messages that the agent produces in the
+        :attr:`Response.chat_message` field. They must be :class:`ChatMessage` types."""
         ...
 
     async def on_messages(self, messages: Sequence[ChatMessage], cancellation_token: CancellationToken) -> Response:
         """Handles incoming messages and returns a response."""
         ...
 
-    async def run(
-        self,
-        task: str,
-        *,
-        cancellation_token: CancellationToken | None = None,
-        termination_condition: TerminationCondition | None = None,
-    ) -> TaskResult:
-        """Run the agent with the given task and return the result."""
+    def on_messages_stream(
+        self, messages: Sequence[ChatMessage], cancellation_token: CancellationToken
+    ) -> AsyncGenerator[AgentEvent | ChatMessage | Response, None]:
+        """Handles incoming messages and returns a stream of inner messages and
+        and the final item is the response."""
+        ...
+
+    async def on_reset(self, cancellation_token: CancellationToken) -> None:
+        """Resets the agent to its initialization state."""
+        ...
+
+    async def save_state(self) -> Mapping[str, Any]:
+        """Save agent state for later restoration"""
+        ...
+
+    async def load_state(self, state: Mapping[str, Any]) -> None:
+        """Restore agent from saved state"""
         ...

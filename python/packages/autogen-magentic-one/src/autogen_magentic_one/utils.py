@@ -5,13 +5,13 @@ from dataclasses import asdict
 from datetime import datetime
 from typing import Any, Dict, List, Literal
 
-from autogen_core.application.logging.events import LLMCallEvent
-from autogen_core.components import Image
-from autogen_core.components.models import (
+from autogen_core import Image
+from autogen_core.logging import LLMCallEvent
+from autogen_core.models import (
     ChatCompletionClient,
     ModelCapabilities,
 )
-from autogen_ext.models import AzureOpenAIChatCompletionClient, OpenAIChatCompletionClient
+from autogen_ext.models.openai import AzureOpenAIChatCompletionClient, OpenAIChatCompletionClient
 
 from .messages import (
     AgentEvent,
@@ -104,6 +104,7 @@ def message_content_to_str(
 class LogHandler(logging.FileHandler):
     def __init__(self, filename: str = "log.jsonl") -> None:
         super().__init__(filename)
+        self.logs_list: List[Dict[str, Any]] = []
 
     def emit(self, record: logging.LogRecord) -> None:
         try:
@@ -121,6 +122,7 @@ class LogHandler(logging.FileHandler):
                         "type": "OrchestrationEvent",
                     }
                 )
+                self.logs_list.append(json.loads(record.msg))
                 super().emit(record)
             elif isinstance(record.msg, AgentEvent):
                 console_message = (
@@ -135,6 +137,7 @@ class LogHandler(logging.FileHandler):
                         "type": "AgentEvent",
                     }
                 )
+                self.logs_list.append(json.loads(record.msg))
                 super().emit(record)
             elif isinstance(record.msg, WebSurferEvent):
                 console_message = f"\033[96m[{ts}], {record.msg.source}: {record.msg.message}\033[0m"
@@ -145,6 +148,7 @@ class LogHandler(logging.FileHandler):
                 }
                 payload.update(asdict(record.msg))
                 record.msg = json.dumps(payload)
+                self.logs_list.append(json.loads(record.msg))
                 super().emit(record)
             elif isinstance(record.msg, LLMCallEvent):
                 record.msg = json.dumps(
@@ -155,6 +159,7 @@ class LogHandler(logging.FileHandler):
                         "type": "LLMCallEvent",
                     }
                 )
+                self.logs_list.append(json.loads(record.msg))
                 super().emit(record)
         except Exception:
             self.handleError(record)

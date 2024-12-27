@@ -1,4 +1,5 @@
-// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// AgentExtensions.cs
 
 using SupportCenter.Backend.Hubs;
 using SupportCenter.Shared;

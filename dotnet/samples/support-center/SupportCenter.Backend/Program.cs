@@ -1,4 +1,7 @@
-using Microsoft.AutoGen.Agents;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Program.cs
+
+using Microsoft.AutoGen.Core;
 using SupportCenter.Backend.Agents;
 using SupportCenter.Backend.Hubs;
 using SupportCenter.Shared;

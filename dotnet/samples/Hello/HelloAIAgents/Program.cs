@@ -1,9 +1,10 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Program.cs
+
 using Hello;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AutoGen.Abstractions;
 using Microsoft.AutoGen.Agents;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.AutoGen.Contracts;
+using Microsoft.AutoGen.Core;
 
 // send a message to the agent
 var builder = WebApplication.CreateBuilder();
@@ -30,11 +31,12 @@ await app.WaitForShutdownAsync();
 
 namespace Hello
 {
-    [TopicSubscription("HelloAgents")]
+    [TopicSubscription("agents")]
     public class HelloAgent(
-        IAgentContext context,
-        [FromKeyedServices("EventTypes")] EventTypes typeRegistry) : ConsoleAgent(
-            context,
+        IAgentWorker worker,
+        [FromKeyedServices("EventTypes")] EventTypes typeRegistry,
+        IHostApplicationLifetime hostApplicationLifetime) : ConsoleAgent(
+            worker,
             typeRegistry),
             ISayHello,
             IHandle<NewMessageReceived>,
@@ -46,14 +48,14 @@ namespace Hello
             var evt = new Output
             {
                 Message = response
-            }.ToCloudEvent(this.AgentId.Key);
-            await PublishEvent(evt).ConfigureAwait(false);
+            };
+            await PublishMessageAsync(evt).ConfigureAwait(false);
             var goodbye = new ConversationClosed
             {
                 UserId = this.AgentId.Key,
                 UserMessage = "Goodbye"
-            }.ToCloudEvent(this.AgentId.Key);
-            await PublishEvent(goodbye).ConfigureAwait(false);
+            };
+            await PublishMessageAsync(goodbye).ConfigureAwait(false);
         }
         public async Task Handle(ConversationClosed item)
         {
@@ -61,11 +63,11 @@ namespace Hello
             var evt = new Output
             {
                 Message = goodbye
-            }.ToCloudEvent(this.AgentId.Key);
-            await PublishEvent(evt).ConfigureAwait(false);
+            };
+            await PublishMessageAsync(evt).ConfigureAwait(false);
             //sleep30 seconds
             await Task.Delay(30000).ConfigureAwait(false);
-            await AgentsApp.ShutdownAsync().ConfigureAwait(false);
+            hostApplicationLifetime.StopApplication();
 
         }
         public async Task<string> SayHello(string ask)

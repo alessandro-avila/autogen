@@ -1,4 +1,7 @@
-﻿namespace SupportCenter.Backend.Hubs;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// ISupportCenterHub.cs
+
+namespace SupportCenter.Backend.Hubs;
 
 public interface ISupportCenterHub
 {

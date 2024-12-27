@@ -3,16 +3,23 @@
 <div align="center">
 <img src="https://microsoft.github.io/autogen/0.2/img/ag.svg" alt="AutoGen Logo" width="100">
 
-[![Twitter](https://img.shields.io/twitter/url/https/twitter.com/cloudposse.svg?style=social&label=Follow%20%40pyautogen)](https://twitter.com/pyautogen)
+[![Twitter](https://img.shields.io/twitter/url/https/twitter.com/cloudposse.svg?style=social&label=Follow%20%40pyautogen)](https://twitter.com/pyautogen) [![LinkedIn](https://img.shields.io/badge/LinkedIn-Company?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/105812540) [![Discord](https://img.shields.io/badge/discord-chat-green?logo=discord)](https://aka.ms/autogen-discord) [![GitHub Discussions](https://img.shields.io/badge/Discussions-Q%26A-green?logo=github)](https://github.com/microsoft/autogen/discussions) [![0.2 Docs](https://img.shields.io/badge/Docs-0.2-blue)](https://microsoft.github.io/autogen/0.2/) [![0.4 Docs](https://img.shields.io/badge/Docs-0.4-blue)](https://microsoft.github.io/autogen/dev/)
 
+[![PyPi autogen-core](https://img.shields.io/badge/PyPi-autogen--core-blue?logo=pypi)](https://pypi.org/project/autogen-core/0.4.0.dev11/) [![PyPi autogen-agentchat](https://img.shields.io/badge/PyPi-autogen--agentchat-blue?logo=pypi)](https://pypi.org/project/autogen-agentchat/0.4.0.dev11/) [![PyPi autogen-ext](https://img.shields.io/badge/PyPi-autogen--ext-blue?logo=pypi)](https://pypi.org/project/autogen-ext/0.4.0.dev11/)
 </div>
 
 # AutoGen
 
 > [!IMPORTANT]
 >
+> - (12/19/24) Hello! 
+The majority of the AutoGen Team members will be resting and recharging with family and friends over the holiday period. Activity/responses on the project may be delayed during the period of Dec 20-Jan 06. We will be excited to engage with you in the new year!
+> - (12/11/24) We have created a new Discord server for the AutoGen community. Join us at [aka.ms/autogen-discord](https://aka.ms/autogen-discord).
+> - (11/14/24) ⚠️ In response to a number of asks to clarify and distinguish between official AutoGen and its forks that created confusion, we issued a [clarification statement](https://github.com/microsoft/autogen/discussions/4217).
 > - (10/13/24) Interested in the standard AutoGen as a prior user? Find it at the actively-maintained *AutoGen* [0.2 branch](https://github.com/microsoft/autogen/tree/0.2) and `autogen-agentchat~=0.2` PyPi package.
 > - (10/02/24) [AutoGen 0.4](https://microsoft.github.io/autogen/dev) is a from-the-ground-up rewrite of AutoGen. Learn more about the history, goals and future at [this blog post](https://microsoft.github.io/autogen/blog). We’re excited to work with the community to gather feedback, refine, and improve the project before we officially release 0.4. This is a big change, so AutoGen 0.2 is still available, maintained, and developed in the [0.2 branch](https://github.com/microsoft/autogen/tree/0.2).
+> - *[Join us for Community Office Hours](https://github.com/microsoft/autogen/discussions/4059)* We will host a weekly open discussion to answer questions, talk about Roadmap, etc.
+
 
 AutoGen is an open-source framework for building AI agent systems.
 It simplifies the creation of event-driven, distributed, scalable, and resilient agentic applications.
@@ -51,7 +58,7 @@ Currently, there are three main APIs your application can target:
 
 - [Core](https://microsoft.github.io/autogen/dev/user-guide/core-user-guide/index.html)
 - [AgentChat](https://microsoft.github.io/autogen/dev/user-guide/agentchat-user-guide/index.html)
-- [Extensions](https://microsoft.github.io/autogen/dev/reference/python/autogen_ext/autogen_ext.html)
+- [Extensions](https://microsoft.github.io/autogen/dev/user-guide/extensions-user-guide/index.html)
 
 ## Core
 
@@ -101,37 +108,46 @@ We look forward to your contributions!
 First install the packages:
 
 ```bash
-pip install autogen-agentchat==0.4.0.dev2 autogen-ext==0.4.0.dev2
+pip install "autogen-agentchat==0.4.0.dev11" "autogen-ext[openai]==0.4.0.dev11"
 ```
 
-The following code uses code execution, you need to have [Docker installed](https://docs.docker.com/engine/install/)
-and running on your machine.
+The following code uses OpenAI's GPT-4o model and you need to provide your
+API key to run.
+To use Azure OpenAI models, follow the instruction
+[here](https://microsoft.github.io/autogen/dev/user-guide/core-user-guide/cookbook/azure-openai-with-aad-auth.html).
 
 ```python
 import asyncio
-import logging
-from autogen_agentchat import EVENT_LOGGER_NAME
-from autogen_agentchat.agents import CodeExecutorAgent, CodingAssistantAgent
-from autogen_agentchat.logging import ConsoleLogHandler
-from autogen_agentchat.teams import RoundRobinGroupChat, StopMessageTermination
-from autogen_ext.code_executor.docker_executor import DockerCommandLineCodeExecutor
-from autogen_ext.models import OpenAIChatCompletionClient
+from autogen_agentchat.agents import AssistantAgent
+from autogen_agentchat.ui import Console
+from autogen_agentchat.conditions import TextMentionTermination
+from autogen_agentchat.teams import RoundRobinGroupChat
+from autogen_ext.models.openai import OpenAIChatCompletionClient
 
-logger = logging.getLogger(EVENT_LOGGER_NAME)
-logger.addHandler(ConsoleLogHandler())
-logger.setLevel(logging.INFO)
+# Define a tool
+async def get_weather(city: str) -> str:
+    return f"The weather in {city} is 73 degrees and Sunny."
 
 async def main() -> None:
-    async with DockerCommandLineCodeExecutor(work_dir="coding") as code_executor:
-        code_executor_agent = CodeExecutorAgent("code_executor", code_executor=code_executor)
-        coding_assistant_agent = CodingAssistantAgent(
-            "coding_assistant", model_client=OpenAIChatCompletionClient(model="gpt-4o", api_key="YOUR_API_KEY")
-        )
-        group_chat = RoundRobinGroupChat([coding_assistant_agent, code_executor_agent])
-        result = await group_chat.run(
-            task="Create a plot of NVDIA and TSLA stock returns YTD from 2024-01-01 and save it to 'nvidia_tesla_2024_ytd.png'.",
-            termination_condition=StopMessageTermination(),
-        )
+    # Define an agent
+    weather_agent = AssistantAgent(
+        name="weather_agent",
+        model_client=OpenAIChatCompletionClient(
+            model="gpt-4o-2024-08-06",
+            # api_key="YOUR_API_KEY",
+        ),
+        tools=[get_weather],
+    )
+
+    # Define termination condition
+    termination = TextMentionTermination("TERMINATE")
+
+    # Define a team
+    agent_team = RoundRobinGroupChat([weather_agent], termination_condition=termination)
+
+    # Run the team and stream messages to the console
+    stream = agent_team.run_stream(task="What is the weather in New York?")
+    await Console(stream)
 
 asyncio.run(main())
 ```
@@ -150,14 +166,14 @@ git switch staging-dev
 # Build the project
 cd dotnet && dotnet build AutoGen.sln
 # In your source code, add AutoGen to your project
-dotnet add <your.csproj> reference <path to your checkout of autogen>/dotnet/src/Microsoft.AutoGen/Agents/Microsoft.AutoGen.Agents.csproj
+dotnet add <your.csproj> reference <path to your checkout of autogen>/dotnet/src/Microsoft.AutoGen/Core/Microsoft.AutoGen.Core.csproj
 ```
 
 Then, define and run your first agent:
 
 ```csharp
-using Microsoft.AutoGen.Abstractions;
-using Microsoft.AutoGen.Agents;
+using Microsoft.AutoGen.Contracts;
+using Microsoft.AutoGen.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -170,11 +186,11 @@ var app = await App.PublishMessageAsync("HelloAgents", new NewMessageReceived
 await App.RuntimeApp!.WaitForShutdownAsync();
 await app.WaitForShutdownAsync();
 
-[TopicSubscription("HelloAgents")]
+[TopicSubscription("agents")]
 public class HelloAgent(
-    IAgentContext context,
+    IAgentContext worker,
     [FromKeyedServices("EventTypes")] EventTypes typeRegistry) : ConsoleAgent(
-        context,
+        worker,
         typeRegistry),
         ISayHello,
         IHandle<NewMessageReceived>,
@@ -187,13 +203,13 @@ public class HelloAgent(
         {
             Message = response
         }.ToCloudEvent(this.AgentId.Key);
-        await PublishEvent(evt).ConfigureAwait(false);
+        await PublishEventAsync(evt).ConfigureAwait(false);
         var goodbye = new ConversationClosed
         {
             UserId = this.AgentId.Key,
             UserMessage = "Goodbye"
         }.ToCloudEvent(this.AgentId.Key);
-        await PublishEvent(goodbye).ConfigureAwait(false);
+        await PublishEventAsync(goodbye).ConfigureAwait(false);
     }
     public async Task Handle(ConversationClosed item)
     {
@@ -202,7 +218,7 @@ public class HelloAgent(
         {
             Message = goodbye
         }.ToCloudEvent(this.AgentId.Key);
-        await PublishEvent(evt).ConfigureAwait(false);
+        await PublishEventAsync(evt).ConfigureAwait(false);
         await Task.Delay(60000);
         await App.ShutdownAsync();
     }
@@ -319,7 +335,7 @@ Use GitHub [Discussions](https://github.com/microsoft/autogen/discussions) for g
 
 ### Do you use Discord for communications?
 
-We are unable to use Discord for project discussions. Therefore, we request that all discussions take place on <https://github.com/microsoft/autogen/discussions/> going forward.
+We are unable to use the old Discord for project discussions, many of the maintainers no longer have viewing or posting rights there. Therefore, we request that all discussions take place on <https://github.com/microsoft/autogen/discussions/>  or the [new discord server](https://aka.ms/autogen-discord).
 
 ### What about forks?
 

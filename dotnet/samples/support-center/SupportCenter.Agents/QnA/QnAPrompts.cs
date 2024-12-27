@@ -1,4 +1,7 @@
-﻿namespace SupportCenter.Agents;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// QnAPrompts.cs
+
+namespace SupportCenter.Agents;
 
 public class QnAPrompts
 {

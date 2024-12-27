@@ -1,21 +1,25 @@
-using SupportCenter.Shared;
-using Microsoft.SemanticKernel.Memory;
-using Microsoft.SemanticKernel;
-using Microsoft.AutoGen.Abstractions;
-using Microsoft.AutoGen.Agents;
-using SupportCenter.Backend.Hubs;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// SignalRAgent.cs
+
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.AutoGen.Agents;
+using Microsoft.AutoGen.Contracts;
+using Microsoft.AutoGen.Core;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Memory;
+using SupportCenter.Backend.Hubs;
+using SupportCenter.Shared;
 
 namespace SupportCenter.Backend.Agents;
 
 [TopicSubscription("default")]
 
 public class SignalRAgent(
-    IAgentContext context,
+    IAgentWorker worker,
     Kernel kernel,
     ISemanticTextMemory memory, [
     FromKeyedServices("EventTypes")] EventTypes typeRegistry,
-    ISignalRService signalRClient): SKAiAgent<Empty>(context, memory, kernel, typeRegistry),
+    ISignalRService signalRClient): SKAiAgent<Empty>(worker, memory, kernel, typeRegistry),
     IHandle<QnAResponse>
 {
     public async Task Handle(QnAResponse item)

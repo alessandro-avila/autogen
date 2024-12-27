@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// CosmosDbOptions.cs
+
 namespace SupportCenter.Shared.Options;
 
 public class CosmosDbOptions
