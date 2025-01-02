@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dispatcher\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.SemanticKernel.Planners.OpenAI" />
   </ItemGroup>
 

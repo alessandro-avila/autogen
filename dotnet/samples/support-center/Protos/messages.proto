@@ -4,7 +4,7 @@ package supportcenter;
 
 option csharp_namespace = "SupportCenter.Shared";
 
-// Agent
+/* Agents */
 
 // User
 message UserChatInput {
@@ -20,8 +20,14 @@ message UserNewConversation {
     string user_id = 1;
 }
 
+// Dispatcher
+message DispatcherNotification {
+    string user_id = 1;
+    string message = 2;
+}
+
 // CustomerInfo
-message CustomerInfoRequested {
+message CustomerInfoRequest {
     string user_id = 1;
     string conversation_id = 2;
     string message = 3;
@@ -38,7 +44,7 @@ message CustomerInfoNotification {
 }
 
 // Invoice
-message InvoiceRequested {
+message InvoiceRequest {
     string user_id = 1;
     string message = 2;
 }
@@ -53,8 +59,19 @@ message InvoiceNotification {
     string message = 2;
 }
 
+// Discount
+message DiscountRequest {
+    string user_id = 1;
+    string message = 2;
+}
+
+message DiscountResponse {
+    string user_id = 1;
+    string message = 2;
+}
+
 // QnA
-message QnARequested {
+message QnARequest {
   string user_id = 1;
   string message = 2;
 }

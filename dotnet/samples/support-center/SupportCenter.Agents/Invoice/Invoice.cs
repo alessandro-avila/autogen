@@ -12,14 +12,14 @@ namespace SupportCenter.Agents.Invoice;
 [TopicSubscription("default")]
 public class Invoice(IAgentWorker worker, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ILogger<Invoice> logger)
     : SKAiAgent<InvoiceState>(worker, memory, kernel, typeRegistry),
-    IHandle<InvoiceRequested>
+    IHandle<InvoiceRequest>
 {
-    public async Task Handle(InvoiceRequested item)
+    public async Task Handle(InvoiceRequest item)
     {
         var userId = item.UserId;
         var message = item.Message;
 
-        logger.LogInformation("[{Agent}]:[{EventType}]:[{EventData}]", nameof(Invoice), typeof(InvoiceRequested), item);
+        logger.LogInformation("[{Agent}]:[{EventType}]:[{EventData}]", nameof(Invoice), typeof(InvoiceRequest), item);
 
         var notif = new InvoiceNotification
         {

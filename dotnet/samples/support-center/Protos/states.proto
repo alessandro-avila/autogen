@@ -31,3 +31,9 @@ message DiscountState {
     string user_id = 1;
     string discount_code = 2;
 }
+
+/* Dispathcer */
+message DispatcherState {
+    string user_id = 1;
+    string message = 2;
+}

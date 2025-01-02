@@ -14,6 +14,7 @@ public class Discount(IAgentWorker worker, Kernel kernel, ISemanticTextMemory me
     : SKAiAgent<DiscountState>(worker, memory, kernel, typeRegistry),
     IHandle<UserNewConversation>
 {
+
     public async Task Handle(UserNewConversation item)
     {
         logger.LogInformation($"[{nameof(Discount)}] Event {nameof(UserNewConversation)}");

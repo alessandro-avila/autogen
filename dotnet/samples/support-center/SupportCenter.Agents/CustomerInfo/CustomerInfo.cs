@@ -14,14 +14,14 @@ namespace SupportCenter.Agents.CustomerInfo;
 [TopicSubscription("default")]
 public class CustomerInfo(IAgentWorker worker, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ILogger<CustomerInfo> logger)
     : SKAiAgent<CustomerInfoState>(worker, memory, kernel, typeRegistry),
-    IHandle<CustomerInfoRequested>,
+    IHandle<CustomerInfoRequest>,
     IHandle<UserNewConversation>
 {
-    public async Task Handle(CustomerInfoRequested item)
+    public async Task Handle(CustomerInfoRequest item)
     {
         var (id, userId, message) = item.GetAgentData();
 
-        logger.LogInformation("[{Agent}]:[{EventType}]:[{EventData}]", nameof(CustomerInfo), typeof(CustomerInfoRequested), item);
+        logger.LogInformation("[{Agent}]:[{EventType}]:[{EventData}]", nameof(CustomerInfo), typeof(CustomerInfoRequest), item);
 
         var notif = new CustomerInfoNotification
         {
@@ -43,7 +43,7 @@ public class CustomerInfo(IAgentWorker worker, Kernel kernel, ISemanticTextMemor
             MaxIterations = 10,
         });
         var result = await planner.ExecuteAsync(_kernel, prompt).ConfigureAwait(false);
-        logger.LogInformation("[{Agent}]:[{EventType}]:[{EventData}]", nameof(CustomerInfo), typeof(CustomerInfoRequested), result.FinalAnswer);
+        logger.LogInformation("[{Agent}]:[{EventType}]:[{EventData}]", nameof(CustomerInfo), typeof(CustomerInfoRequest), result.FinalAnswer);
 
         var response = new CustomerInfoResponse
         {

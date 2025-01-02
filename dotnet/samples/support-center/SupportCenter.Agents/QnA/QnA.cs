@@ -13,11 +13,11 @@ namespace SupportCenter.Agents.QnA;
 [TopicSubscription("default")]
 public class QnA(IAgentWorker worker, Kernel kernel, ISemanticTextMemory memory, [FromKeyedServices("EventTypes")] EventTypes typeRegistry, ILogger<QnA> logger)
     : SKAiAgent<QnAState>(worker, memory, kernel, typeRegistry),
-    IHandle<QnARequested>
+    IHandle<QnARequest>
 {
-    public async Task Handle(QnARequested item)
+    public async Task Handle(QnARequest item)
     {
-        logger.LogInformation($"[{nameof(QnA)}] Event {nameof(QnARequested)}. Text: {{Text}}", item.Message);
+        logger.LogInformation($"[{nameof(QnA)}] Event {nameof(QnARequest)}. Text: {{Text}}", item.Message);
 
         var context = new KernelArguments { ["input"] = AppendChatHistory(item.Message) };
         var answer = await CallFunction(QnAPrompts.QnAGenericPrompt, context);

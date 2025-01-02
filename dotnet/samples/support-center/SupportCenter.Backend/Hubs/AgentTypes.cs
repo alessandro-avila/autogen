@@ -5,7 +5,6 @@ namespace SupportCenter.Backend.Hubs;
 
 public enum AgentTypes
 {
-   
     Chat,
     Dispatcher,
     QnA,
