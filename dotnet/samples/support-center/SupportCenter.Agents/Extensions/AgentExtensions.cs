@@ -8,17 +8,6 @@ namespace SupportCenter.Agents.Extensions;
 
 public static class AgentExtensions
 {
-    //public static (string id, string userId, string userMessage) GetAgentData(this CustomerInfoRequest item)
-    //{
-    //    var userId = item.UserId;
-    //    var userMessage = item.Message;
-
-    //    var conversationId = SignalRConnectionsDB.GetConversationId(userId) ?? item.ConversationId;
-    //    var id = $"{userId}/{conversationId}";
-
-    //    return (id, userId, userMessage);
-    //}
-
     public static (string id, string userId, string userMessage) GetAgentData(this IMessage item)
     {
         var eventType = item.GetType();
@@ -33,7 +22,7 @@ public static class AgentExtensions
 
         // Get ConversationId if it exists
         var conversationIdProperty = eventType.GetProperty("ConversationId") ?? eventType.GetProperty("conversation_id");
-        var conversationId = conversationIdProperty?.GetValue(item)?.ToString();
+        var conversationId = conversationIdProperty?.GetValue(item)?.ToString() ?? string.Empty;
 
         // Generate ID
         var conversationIdValue = SignalRConnectionsDB.GetConversationId(userId) ?? conversationId ?? string.Empty;
