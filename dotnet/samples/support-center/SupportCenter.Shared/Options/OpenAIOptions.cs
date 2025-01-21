@@ -1,25 +1,28 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
-// OpenAIOptions.cs
+// OpenAiOptions.cs
 
 using System.ComponentModel.DataAnnotations;
 
 namespace SupportCenter.Shared.Options;
 
-public class OpenAIOptions
+public class OpenAiOptions
 {
     // Embeddings
     [Required]
-    public required string EmbeddingsEndpoint { get; set; }
+    public string EmbeddingsEndpoint { get; set; } = string.Empty;
     [Required]
-    public required string EmbeddingsApiKey { get; set; }
+    public string EmbeddingsApiKey { get; set; } = string.Empty;
     [Required]
-    public required string EmbeddingsDeploymentOrModelId { get; set; }
+    public string EmbeddingsDeploymentOrModelId { get; set; } = string.Empty;
 
     // Chat
     [Required]
-    public required string ChatEndpoint { get; set; }
+    public string ChatEndpoint { get; set; } = string.Empty;
     [Required]
-    public required string ChatApiKey { get; set; }
+    public string ChatApiKey { get; set; } = string.Empty;
     [Required]
-    public required string ChatDeploymentOrModelId { get; set; }
+    public string ChatDeploymentOrModelId { get; set; } = string.Empty;
+
+    public string? InvoiceDeploymentOrModelId { get; set; }
+    public string? ConversationDeploymentOrModelId { get; set; }
 }

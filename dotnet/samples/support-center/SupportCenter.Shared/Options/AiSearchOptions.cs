@@ -3,7 +3,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace SupportCenter.Options;
+namespace SupportCenter.Shared.Options;
 public class AiSearchOptions
 {
     // AI Search

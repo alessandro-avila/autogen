@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // QnAPrompts.cs
 
-namespace SupportCenter.Agents;
+namespace SupportCenter.Agents.QnA;
 
 public class QnAPrompts
 {

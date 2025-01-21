@@ -3,7 +3,7 @@
 
 using Microsoft.AutoGen.Core;
 using SupportCenter.Agents.QnA;
-using SupportCenter.Shared;
+using SupportCenter.Shared.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

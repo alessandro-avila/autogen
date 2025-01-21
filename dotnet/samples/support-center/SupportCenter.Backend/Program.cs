@@ -4,7 +4,7 @@
 using Microsoft.AutoGen.Core;
 using SupportCenter.Backend.Agents;
 using SupportCenter.Backend.Hubs;
-using SupportCenter.Shared;
+using SupportCenter.Shared.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +22,7 @@ builder.Services.AddSingleton<ISignalRService, SignalRService>();
 
 // Allow any CORS origin if in DEV
 const string AllowDebugOriginPolicy = "AllowDebugOrigin";
+const string AllowOriginPolicy = "AllowOrigin";
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddCors(options =>
@@ -29,12 +30,32 @@ if (builder.Environment.IsDevelopment())
         options.AddPolicy(AllowDebugOriginPolicy, builder =>
         {
             builder
-            .WithOrigins("*") // client url
+            .WithOrigins("http://localhost:3000", "http://localhost:3001") // client urls
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
         });
     });
 }
+else
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(AllowOriginPolicy, builder =>
+        {
+            builder
+            .SetIsOriginAllowedToAllowWildcardSubdomains()
+            .WithOrigins("https://*.azurecontainerapps.io") // client url
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+        });
+    });
+}
+
+builder.Services.ExtendOptions();
+builder.Services.ExtendServices();
+builder.Services.RegisterSemanticKernelNativeFunctions();
 
 var app = builder.Build();
 
