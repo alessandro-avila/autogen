@@ -9,7 +9,6 @@ using SupportCenter.Shared.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-builder.ConfigureSemanticKernel();
 
 builder.Services.AddHttpClient();
 builder.Services.AddControllers();

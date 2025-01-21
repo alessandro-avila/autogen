@@ -2,11 +2,9 @@
 // SemanticKernelHostingExtensions.cs
 
 #pragma warning disable SKEXP0050
-using System.Text.Json;
 using Azure;
 using Azure.AI.OpenAI;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -21,32 +19,6 @@ using SupportCenter.Shared.Options;
 namespace SupportCenter.Shared.Extensions;
 public static class SemanticKernelHostingExtensions
 {
-    public static IHostApplicationBuilder ConfigureSemanticKernel(this IHostApplicationBuilder builder)
-    {
-        // TODO: fix
-        //builder.Services.AddTransient(CreateKernel);
-        //builder.Services.AddTransient(CreateMemory);
-
-        builder.Services.Configure<OpenAIOptions>(o =>
-        {
-            o.EmbeddingsEndpoint = o.ChatEndpoint = builder.Configuration["OpenAI:Endpoint"] ?? throw new InvalidOperationException("Ensure that OpenAI:Endpoint is set in configuration");
-            o.EmbeddingsApiKey = o.ChatApiKey = builder.Configuration["OpenAI:Key"]!;
-            o.EmbeddingsDeploymentOrModelId = "text-embedding-ada-002";
-            o.ChatDeploymentOrModelId = "gpt-4o";
-        });
-
-        //builder.Services.Configure<OpenAIClientOptions>(o =>
-        //{
-        //    o.RetryPolicy = new Azure.Core.Pipeline.RetryPolicy(maxRetries: 5, DelayStrategy.CreateExponentialDelayStrategy());
-        //});
-
-        builder.Services.Configure<JsonSerializerOptions>(options =>
-        {
-            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        });
-        return builder;
-    }
-
     public static ISemanticTextMemory CreateMemory(IServiceProvider provider, string agent)
     {
         OpenAIOptions openAiConfig = provider.GetService<IOptions<OpenAIOptions>>()?.Value ?? new OpenAIOptions();
