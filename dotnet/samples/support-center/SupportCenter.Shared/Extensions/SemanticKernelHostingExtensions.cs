@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.AzureAISearch;
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 using Microsoft.SemanticKernel.Connectors.Qdrant;
 using Microsoft.SemanticKernel.Memory;
 using OpenAI;
@@ -60,23 +61,25 @@ public static class SemanticKernelHostingExtensions
         });
         if (agent == "Invoice")
         {
-            AiSearchOptions aiSearchConfig = provider.GetService<IOptions<AiSearchOptions>>()?.Value ?? new AiSearchOptions();
+            var aiSearchConfig = provider.GetService<IOptions<AiSearchOptions>>()?.Value ?? new AiSearchOptions();
             aiSearchConfig.ValidateRequiredProperties();
 
             var memoryBuilder = new MemoryBuilder();
             return memoryBuilder.WithLoggerFactory(loggerFactory)
                             .WithMemoryStore(new AzureAISearchMemoryStore(aiSearchConfig.SearchEndpoint!, aiSearchConfig.SearchKey!))
-                            .WithAzureOpenAITextEmbeddingGeneration(aiSearchConfig.SearchEmbeddingDeploymentOrModelId!, aiSearchConfig.SearchEmbeddingEndpoint!, aiSearchConfig.SearchEmbeddingApiKey!)
+                            // IMPROVE: maybe with a dependency injection container:
+                            // https://learn.microsoft.com/en-us/semantic-kernel/concepts/vector-store-connectors/embedding-generation?pivots=programming-language-csharp#constructing-an-embedding-generator
+                            .WithTextEmbeddingGeneration(new AzureOpenAITextEmbeddingGenerationService(openAiConfig.EmbeddingsDeploymentOrModelId, openAiConfig.EmbeddingsEndpoint, openAiConfig.EmbeddingsApiKey))
                             .Build();
         }
         else
         {
-            QdrantOptions qdrantConfig = provider.GetService<IOptions<QdrantOptions>>()?.Value ?? new QdrantOptions();
+            var qdrantConfig = provider.GetService<IOptions<QdrantOptions>>()?.Value ?? new QdrantOptions();
             qdrantConfig.ValidateRequiredProperties();
 
             return new MemoryBuilder().WithLoggerFactory(loggerFactory)
                          .WithQdrantMemoryStore(qdrantConfig.Endpoint, qdrantConfig.VectorSize)
-                         .WithAzureOpenAITextEmbeddingGeneration(openAiConfig.EmbeddingsDeploymentOrModelId, openAiConfig.EmbeddingsEndpoint, openAiConfig.EmbeddingsApiKey)
+                         .WithTextEmbeddingGeneration(new AzureOpenAITextEmbeddingGenerationService(openAiConfig.EmbeddingsDeploymentOrModelId, openAiConfig.EmbeddingsEndpoint, openAiConfig.EmbeddingsApiKey))
                          .Build();
         }
     }
@@ -88,8 +91,11 @@ public static class SemanticKernelHostingExtensions
         var agentConfiguration = AgentConfiguration.GetAgentConfiguration(agent);
         agentConfiguration.ConfigureOpenAI(openAiConfig);
 
-        var clientOptions = new OpenAIClientOptions();
-        clientOptions.Retry.NetworkTimeout = TimeSpan.FromMinutes(5);
+        // TODO: add clientoptions
+        //var clientOptions = new OpenAIClientOptions
+        //{
+        //    RetryPolicy = new Azure.Core.Pipeline.RetryPolicy(maxRetries: 5, DelayStrategy.CreateExponentialDelayStrategy())
+        //};
         var builder = Kernel.CreateBuilder();
         builder.Services.AddLogging(c => c.AddConsole().AddDebug().SetMinimumLevel(LogLevel.Debug));
 
@@ -107,7 +113,7 @@ public static class SemanticKernelHostingExtensions
         openAIClient = new OpenAIClient(new Uri(openAiConfig.EmbeddingsEndpoint), new AzureKeyCredential(openAiConfig.EmbeddingsApiKey), clientOptions);
         if (openAiConfig.EmbeddingsEndpoint.Contains(".azure", StringComparison.OrdinalIgnoreCase))
         {
-            builder.Services.AddAzureOpenAITextEmbeddingGeneration(openAiConfig.EmbeddingsDeploymentOrModelId, openAIClient);
+            builder.Services.AddAzureTextEmbeddingGeneration(openAiConfig.EmbeddingsDeploymentOrModelId, openAIClient);
         }
         else
         {

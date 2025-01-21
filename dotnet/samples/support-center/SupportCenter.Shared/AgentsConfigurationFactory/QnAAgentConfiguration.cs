@@ -6,7 +6,7 @@ using SupportCenter.Shared.Options;
 
 namespace SupportCenter.Shared.AgentsConfigurationFactory;
 
-internal class QnAAgentConfiguration : IAgentConfiguration
+internal sealed class QnAAgentConfiguration : IAgentConfiguration
 {
     public void ConfigureOpenAI(OpenAiOptions options)
     {

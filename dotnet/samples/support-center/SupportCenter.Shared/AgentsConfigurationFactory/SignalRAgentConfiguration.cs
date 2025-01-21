@@ -6,7 +6,7 @@ using SupportCenter.Shared.Options;
 
 namespace SupportCenter.Shared.AgentsConfigurationFactory;
 
-internal class SignalRAgentConfiguration : IAgentConfiguration
+internal sealed class SignalRAgentConfiguration : IAgentConfiguration
 {
     public void ConfigureOpenAI(OpenAiOptions options)
     {

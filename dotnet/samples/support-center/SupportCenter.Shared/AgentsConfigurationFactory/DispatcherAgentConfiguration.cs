@@ -6,7 +6,7 @@ using SupportCenter.Shared.Options;
 
 namespace SupportCenter.Shared.AgentsConfigurationFactory;
 
-internal class DispatcherAgentConfiguration : IAgentConfiguration
+internal sealed class DispatcherAgentConfiguration : IAgentConfiguration
 {
     public void ConfigureOpenAI(OpenAiOptions options)
     {
