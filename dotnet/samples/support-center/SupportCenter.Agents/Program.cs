@@ -3,6 +3,7 @@
 
 using Microsoft.AutoGen.Core;
 using SupportCenter.Agents.QnA;
+using SupportCenter.ServiceDefaults;
 using SupportCenter.Shared.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,6 @@ builder.AddAgentWorker(builder.Configuration["AGENT_HOST"]!)
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
+SupportCenter.ServiceDefaults.Extensions.MapDefaultEndpoints(app);
 
 app.Run();

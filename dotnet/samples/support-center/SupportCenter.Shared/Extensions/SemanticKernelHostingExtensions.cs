@@ -27,7 +27,7 @@ public static class SemanticKernelHostingExtensions
         //builder.Services.AddTransient(CreateKernel);
         //builder.Services.AddTransient(CreateMemory);
 
-        builder.Services.Configure<OpenAiOptions>(o =>
+        builder.Services.Configure<OpenAIOptions>(o =>
         {
             o.EmbeddingsEndpoint = o.ChatEndpoint = builder.Configuration["OpenAI:Endpoint"] ?? throw new InvalidOperationException("Ensure that OpenAI:Endpoint is set in configuration");
             o.EmbeddingsApiKey = o.ChatApiKey = builder.Configuration["OpenAI:Key"]!;
@@ -49,7 +49,7 @@ public static class SemanticKernelHostingExtensions
 
     public static ISemanticTextMemory CreateMemory(IServiceProvider provider, string agent)
     {
-        OpenAiOptions openAiConfig = provider.GetService<IOptions<OpenAiOptions>>()?.Value ?? new OpenAiOptions();
+        OpenAIOptions openAiConfig = provider.GetService<IOptions<OpenAIOptions>>()?.Value ?? new OpenAIOptions();
         openAiConfig.ValidateRequiredProperties();
 
         var loggerFactory = LoggerFactory.Create(builder =>
@@ -61,7 +61,7 @@ public static class SemanticKernelHostingExtensions
         });
         if (agent == "Invoice")
         {
-            var aiSearchConfig = provider.GetService<IOptions<AiSearchOptions>>()?.Value ?? new AiSearchOptions();
+            var aiSearchConfig = provider.GetService<IOptions<AISearchOptions>>()?.Value ?? new AISearchOptions();
             aiSearchConfig.ValidateRequiredProperties();
 
             var memoryBuilder = new MemoryBuilder();
@@ -86,7 +86,7 @@ public static class SemanticKernelHostingExtensions
 
     public static Kernel CreateKernel(IServiceProvider provider, string agent)
     {
-        var openAiConfig = provider.GetService<IOptions<OpenAiOptions>>()?.Value ?? new OpenAiOptions();
+        var openAiConfig = provider.GetService<IOptions<OpenAIOptions>>()?.Value ?? new OpenAIOptions();
 
         var agentConfiguration = AgentConfiguration.GetAgentConfiguration(agent);
         agentConfiguration.ConfigureOpenAI(openAiConfig);

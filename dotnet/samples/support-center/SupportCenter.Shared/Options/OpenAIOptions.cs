@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SupportCenter.Shared.Options;
 
-public class OpenAiOptions
+public class OpenAIOptions
 {
     // Embeddings
     [Required]

@@ -8,7 +8,7 @@ namespace SupportCenter.Shared.AgentsConfigurationFactory;
 
 public class InvoiceAgentConfiguration : IAgentConfiguration
 {
-    public void ConfigureOpenAI(OpenAiOptions options)
+    public void ConfigureOpenAI(OpenAIOptions options)
     {
         options.ChatDeploymentOrModelId = options.InvoiceDeploymentOrModelId ?? options.ChatDeploymentOrModelId;
     }

@@ -8,6 +8,6 @@ namespace SupportCenter.Shared.AgentsConfigurationFactory;
 
 public interface IAgentConfiguration
 {
-    void ConfigureOpenAI(OpenAiOptions options);
+    void ConfigureOpenAI(OpenAIOptions options);
     void ConfigureKernel(Kernel kernel, IServiceProvider serviceProvider);
 }

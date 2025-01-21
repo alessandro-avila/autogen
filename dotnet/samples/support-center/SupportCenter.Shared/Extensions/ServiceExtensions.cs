@@ -15,10 +15,10 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection ExtendOptions(this IServiceCollection services)
     {
-        services.AddOptions<OpenAiOptions>()
+        services.AddOptions<OpenAIOptions>()
             .Configure<IConfiguration>((settings, configuration) =>
             {
-                configuration.GetSection(nameof(OpenAiOptions)).Bind(settings);
+                configuration.GetSection(nameof(OpenAIOptions)).Bind(settings);
             })
             .ValidateDataAnnotations()
             .ValidateOnStart();
@@ -39,10 +39,10 @@ public static class ServiceCollectionExtensions
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        services.AddOptions<AiSearchOptions>()
+        services.AddOptions<AISearchOptions>()
             .Configure<IConfiguration>((settings, configuration) =>
             {
-                configuration.GetSection(nameof(AiSearchOptions)).Bind(settings);
+                configuration.GetSection(nameof(AISearchOptions)).Bind(settings);
             })
             .ValidateDataAnnotations()
             .ValidateOnStart();

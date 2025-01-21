@@ -12,7 +12,7 @@ public class CustomerInfoAgentConfiguration : IAgentConfiguration
 {
     private readonly string customerPlugin = "CustomerPlugin";
 
-    public void ConfigureOpenAI(OpenAiOptions options)
+    public void ConfigureOpenAI(OpenAIOptions options)
     {
         options.ChatDeploymentOrModelId = options.ConversationDeploymentOrModelId ?? options.ChatDeploymentOrModelId;
     }

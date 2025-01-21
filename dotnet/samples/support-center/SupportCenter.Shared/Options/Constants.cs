@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
-// Consts.cs
+// Constants.cs
 
 namespace SupportCenter.Shared.Options;
 
-public static class Consts
+public static class Constants
 {
     public const string OrleansNamespace = "default";
 }

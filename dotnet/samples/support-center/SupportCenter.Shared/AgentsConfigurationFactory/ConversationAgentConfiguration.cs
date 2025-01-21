@@ -8,7 +8,7 @@ namespace SupportCenter.Shared.AgentsConfigurationFactory;
 
 public class ConversationAgentConfiguration : IAgentConfiguration
 {
-    public void ConfigureOpenAI(OpenAiOptions options)
+    public void ConfigureOpenAI(OpenAIOptions options)
     {
         options.ChatDeploymentOrModelId = options.ConversationDeploymentOrModelId ?? options.ChatDeploymentOrModelId;
     }

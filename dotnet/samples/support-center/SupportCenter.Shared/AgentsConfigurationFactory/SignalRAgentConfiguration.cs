@@ -8,7 +8,7 @@ namespace SupportCenter.Shared.AgentsConfigurationFactory;
 
 internal sealed class SignalRAgentConfiguration : IAgentConfiguration
 {
-    public void ConfigureOpenAI(OpenAiOptions options)
+    public void ConfigureOpenAI(OpenAIOptions options)
     {
     }
 
