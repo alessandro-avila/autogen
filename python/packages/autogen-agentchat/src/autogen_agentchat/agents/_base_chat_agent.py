@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Any, AsyncGenerator, List, Mapping, Sequence, Tuple
+from typing import Any, AsyncGenerator, List, Mapping, Sequence
 
-from autogen_core import CancellationToken
+from autogen_core import CancellationToken, ComponentBase
+from pydantic import BaseModel
 
 from ..base import ChatAgent, Response, TaskResult
 from ..messages import (
@@ -13,7 +14,7 @@ from ..messages import (
 from ..state import BaseState
 
 
-class BaseChatAgent(ChatAgent, ABC):
+class BaseChatAgent(ChatAgent, ABC, ComponentBase[BaseModel]):
     """Base class for a chat agent.
 
     This abstract class provides a base implementation for a :class:`ChatAgent`.
@@ -34,6 +35,8 @@ class BaseChatAgent(ChatAgent, ABC):
         Do not pass the entire conversation history to the agent on each call.
         This design principle must be followed when creating a new agent.
     """
+
+    component_type = "agent"
 
     def __init__(self, name: str, description: str) -> None:
         self._name = name
@@ -56,7 +59,7 @@ class BaseChatAgent(ChatAgent, ABC):
 
     @property
     @abstractmethod
-    def produced_message_types(self) -> Tuple[type[ChatMessage], ...]:
+    def produced_message_types(self) -> Sequence[type[ChatMessage]]:
         """The types of messages that the agent produces in the
         :attr:`Response.chat_message` field. They must be :class:`ChatMessage` types."""
         ...
@@ -190,3 +193,7 @@ class BaseChatAgent(ChatAgent, ABC):
     async def load_state(self, state: Mapping[str, Any]) -> None:
         """Restore agent from saved state. Default implementation for stateless agents."""
         BaseState.model_validate(state)
+
+    async def close(self) -> None:
+        """Called when the runtime is closed"""
+        pass

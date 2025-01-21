@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
-// OpenAiOptions.cs
+// OpenAIOptions.cs
 
 using System.ComponentModel.DataAnnotations;
 
