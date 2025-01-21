@@ -4,6 +4,7 @@
 #pragma warning disable SKEXP0050
 using System.Text.Json;
 using Azure;
+using Azure.AI.OpenAI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http.Resilience;
@@ -14,7 +15,6 @@ using Microsoft.SemanticKernel.Connectors.AzureAISearch;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 using Microsoft.SemanticKernel.Connectors.Qdrant;
 using Microsoft.SemanticKernel.Memory;
-using OpenAI;
 using SupportCenter.Shared.AgentsConfigurationFactory;
 using SupportCenter.Shared.Options;
 
@@ -35,10 +35,10 @@ public static class SemanticKernelHostingExtensions
             o.ChatDeploymentOrModelId = "gpt-4o";
         });
 
-        /*builder.Services.Configure<OpenAIClientOptions>(o =>
-        {
-            o.Retry.NetworkTimeout = TimeSpan.FromMinutes(5);
-        });*/
+        //builder.Services.Configure<OpenAIClientOptions>(o =>
+        //{
+        //    o.RetryPolicy = new Azure.Core.Pipeline.RetryPolicy(maxRetries: 5, DelayStrategy.CreateExponentialDelayStrategy());
+        //});
 
         builder.Services.Configure<JsonSerializerOptions>(options =>
         {
@@ -91,34 +91,21 @@ public static class SemanticKernelHostingExtensions
         var agentConfiguration = AgentConfiguration.GetAgentConfiguration(agent);
         agentConfiguration.ConfigureOpenAI(openAiConfig);
 
-        // TODO: add clientoptions
-        //var clientOptions = new OpenAIClientOptions
-        //{
-        //    RetryPolicy = new Azure.Core.Pipeline.RetryPolicy(maxRetries: 5, DelayStrategy.CreateExponentialDelayStrategy())
-        //};
+        var clientOptions = new AzureOpenAIClientOptions()
+        {
+
+        };
         var builder = Kernel.CreateBuilder();
         builder.Services.AddLogging(c => c.AddConsole().AddDebug().SetMinimumLevel(LogLevel.Debug));
 
         // Chat
-        var openAIClient = new OpenAIClient(new Uri(openAiConfig.ChatEndpoint), new AzureKeyCredential(openAiConfig.ChatApiKey), clientOptions);
-        if (openAiConfig.ChatEndpoint.Contains(".azure", StringComparison.OrdinalIgnoreCase))
-        {
-            builder.Services.AddAzureOpenAIChatCompletion(openAiConfig.ChatDeploymentOrModelId, openAIClient);
-        }
-        else
-        {
-            builder.Services.AddOpenAIChatCompletion(openAiConfig.ChatDeploymentOrModelId, openAIClient);
-        }
+        var azureOpenAIClientForChat = new AzureOpenAIClient(new Uri(openAiConfig.ChatEndpoint), new AzureKeyCredential(openAiConfig.ChatApiKey), clientOptions);
+        builder.Services.AddAzureOpenAIChatCompletion(openAiConfig.ChatDeploymentOrModelId, azureOpenAIClientForChat);
+
         // Embeddings
-        openAIClient = new OpenAIClient(new Uri(openAiConfig.EmbeddingsEndpoint), new AzureKeyCredential(openAiConfig.EmbeddingsApiKey), clientOptions);
-        if (openAiConfig.EmbeddingsEndpoint.Contains(".azure", StringComparison.OrdinalIgnoreCase))
-        {
-            builder.Services.AddAzureTextEmbeddingGeneration(openAiConfig.EmbeddingsDeploymentOrModelId, openAIClient);
-        }
-        else
-        {
-            builder.Services.AddOpenAITextEmbeddingGeneration(openAiConfig.EmbeddingsDeploymentOrModelId, openAIClient);
-        }
+        var azureOpenAIClientForEmbedding = new AzureOpenAIClient(new Uri(openAiConfig.EmbeddingsEndpoint), new AzureKeyCredential(openAiConfig.EmbeddingsApiKey), clientOptions);
+
+        builder.Services.AddAzureOpenAITextEmbeddingGeneration(openAiConfig.EmbeddingsDeploymentOrModelId, azureOpenAIClientForEmbedding);
 
         builder.Services.ConfigureHttpClientDefaults(c =>
         {

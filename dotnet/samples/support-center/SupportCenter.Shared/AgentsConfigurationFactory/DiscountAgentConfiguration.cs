@@ -6,7 +6,7 @@ using SupportCenter.Shared.Options;
 
 namespace SupportCenter.Shared.AgentsConfigurationFactory;
 
-internal class DiscountAgentConfiguration : IAgentConfiguration
+internal sealed class DiscountAgentConfiguration : IAgentConfiguration
 {
     public void ConfigureOpenAI(OpenAiOptions options)
     {
