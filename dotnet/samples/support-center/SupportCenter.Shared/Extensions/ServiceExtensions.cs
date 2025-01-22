@@ -63,6 +63,23 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    private static void AddSemanticKernelResolvers(IServiceCollection services)
+    {
+        /* 
+         * Register the resolvers for the Semantic Kernel
+         * This is used to resolve the kernel and memory for the agent
+         * The kernel is used to execute the functions and the memory is used to store the state
+         */
+        services.AddSingleton<KernelResolver>(serviceProvider => agent =>
+        {
+            return CreateKernel(serviceProvider, agent);
+        });
+        services.AddSingleton<SemanticTextMemoryResolver>(serviceProvider => agent =>
+        {
+            return CreateMemory(serviceProvider, agent);
+        });
+    }
+
     private static void AddSemanticKernelServices(IServiceCollection services)
     {
         services.AddKeyedSingleton("ConversationKernel", (sp, _) => CreateKernel(sp, "Conversation"));
@@ -83,23 +100,6 @@ public static class ServiceCollectionExtensions
     private static void RegisterRepositories(IServiceCollection services)
     {
         services.AddSingleton<ICustomerRepository, CustomerRepository>();
-    }
-
-    private static void AddSemanticKernelResolvers(IServiceCollection services)
-    {
-        /* 
-         * Register the resolvers for the Semantic Kernel
-         * This is used to resolve the kernel and memory for the agent
-         * The kernel is used to execute the functions and the memory is used to store the state
-         */
-        services.AddSingleton<KernelResolver>(serviceProvider => agent =>
-        {
-            return CreateKernel(serviceProvider, agent);
-        });
-        services.AddSingleton<SemanticTextMemoryResolver>(serviceProvider => agent =>
-        {
-            return CreateMemory(serviceProvider, agent);
-        });
     }
 
     public static void RegisterSemanticKernelNativeFunctions(this IServiceCollection serviceCollection)
