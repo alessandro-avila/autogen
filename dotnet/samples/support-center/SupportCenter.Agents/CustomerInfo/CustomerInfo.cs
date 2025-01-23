@@ -5,6 +5,8 @@ using global::SupportCenter.Shared;
 using Microsoft.AutoGen.Agents;
 using Microsoft.AutoGen.Contracts;
 using Microsoft.AutoGen.Core;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Memory;
 using Microsoft.SemanticKernel.Planning;

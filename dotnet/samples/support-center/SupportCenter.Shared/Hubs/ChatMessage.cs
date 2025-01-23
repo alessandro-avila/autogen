@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ChatMessage.cs
 
-namespace SupportCenter.Backend.Hubs;
+namespace SupportCenter.Shared.Hubs;
 
 public class ChatMessage
 {

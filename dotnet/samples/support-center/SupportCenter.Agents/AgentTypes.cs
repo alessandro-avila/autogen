@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // AgentTypes.cs
 
-namespace SupportCenter.Backend.Hubs;
+namespace SupportCenter.Agents;
 
 public enum AgentTypes
 {

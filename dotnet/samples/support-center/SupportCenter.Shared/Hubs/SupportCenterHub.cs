@@ -4,9 +4,8 @@
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AutoGen.Contracts;
 using Microsoft.AutoGen.Core;
-using SupportCenter.Shared;
 
-namespace SupportCenter.Backend.Hubs;
+namespace SupportCenter.Shared.Hubs;
 public class SupportCenterHub(IAgentWorker client) : Hub<ISupportCenterHub>
 {
     public override async Task OnConnectedAsync()
@@ -41,7 +40,7 @@ public class SupportCenterHub(IAgentWorker client) : Hub<ISupportCenterHub>
         ArgumentException.ThrowIfNullOrWhiteSpace(userId, nameof(userId));
         ArgumentException.ThrowIfNullOrWhiteSpace(conversationId, nameof(conversationId));
 
-        string? oldConversationId = SignalRConnectionsDB.GetConversationId(userId);
+        var oldConversationId = SignalRConnectionsDB.GetConversationId(userId);
 
         SignalRConnectionsDB.ConnectionByUser.AddOrUpdate(
             userId,

@@ -2,8 +2,9 @@
 // SignalRService.cs
 
 using Microsoft.AspNetCore.SignalR;
+using SupportCenter.Shared.Hubs;
 
-namespace SupportCenter.Backend.Hubs;
+namespace SupportCenter.Agents.Services;
 
 public class SignalRService(IHubContext<SupportCenterHub> hubContext) : ISignalRService
 {

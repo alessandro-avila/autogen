@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SupportCenter.AgentHost\SupportCenter.AgentHost.csproj" />
     <ProjectReference Include="..\SupportCenter.Agents\SupportCenter.Agents.csproj" />
     <ProjectReference Include="..\SupportCenter.Backend\SupportCenter.Backend.csproj" />
   </ItemGroup>

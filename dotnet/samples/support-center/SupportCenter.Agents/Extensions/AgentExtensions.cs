@@ -2,7 +2,7 @@
 // AgentExtensions.cs
 
 using Google.Protobuf;
-using SupportCenter.Backend.Hubs;
+using SupportCenter.Shared.Hubs;
 
 namespace SupportCenter.Agents.Extensions;
 
@@ -25,6 +25,7 @@ public static class AgentExtensions
         var conversationId = conversationIdProperty?.GetValue(item)?.ToString() ?? string.Empty;
 
         // Generate ID
+        // TODO: move this to Agents proj.
         var conversationIdValue = SignalRConnectionsDB.GetConversationId(userId) ?? conversationId ?? string.Empty;
         var id = $"{userId}/{conversationIdValue}";
 

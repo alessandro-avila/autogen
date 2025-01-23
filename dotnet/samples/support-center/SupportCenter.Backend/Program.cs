@@ -2,9 +2,15 @@
 // Program.cs
 
 using Microsoft.AutoGen.Core;
-using SupportCenter.Backend.Agents;
-using SupportCenter.Backend.Hubs;
+using SupportCenter.Agents.CustomerInfo;
+using SupportCenter.Agents.Discount;
+using SupportCenter.Agents.Dispatcher;
+using SupportCenter.Agents.Invoice;
+using SupportCenter.Agents.QnA;
+using SupportCenter.Agents.Services;
+using SupportCenter.Agents.SignalR;
 using SupportCenter.Shared.Extensions;
+using SupportCenter.Shared.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +20,14 @@ builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
+                //.AddNamedAzureSignalR("signalr"); ;
+
 builder.AddAgentWorker(builder.Configuration["AGENT_HOST"]!)
+    .AddAgent<Dispatcher>("dispatcher")
+    .AddAgent<CustomerInfo>("customerInfo")
+    .AddAgent<Discount>("discount")
+    .AddAgent<Invoice>("invoice")
+    .AddAgent<QnA>("qna")
     .AddAgent<SignalRAgent>("signalr-hub");
 builder.Services.AddSingleton<AgentWorker>();
 builder.Services.AddSingleton<ISignalRService, SignalRService>();
@@ -62,12 +75,6 @@ app.MapDefaultEndpoints();
 app.UseRouting();
 app.UseCors(AllowDebugOriginPolicy);
 app.MapControllers();
-
-/*app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-});*/
 
 app.MapHub<SupportCenterHub>("/supportcenterhub");
 app.Run();

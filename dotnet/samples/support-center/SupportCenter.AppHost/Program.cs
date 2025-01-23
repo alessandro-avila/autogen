@@ -5,14 +5,10 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 builder.AddAzureProvisioning();
 
-//TODO: Add Persistent storage for the agents
-var orleans = builder.AddOrleans("orleans")
-    .WithDevelopmentClustering();
-
 /* Agent Host */
-var agentHost = builder.AddProject<Projects.SupportCenter_AgentHost>("agentHost")
-    .WithReference(orleans);
-var agentHostHttps = agentHost.GetEndpoint("https");
+//var agentHost = builder.AddProject<Projects.SupportCenter_AgentHost>("agentHost")
+//    .WithReference(orleans);
+//var agentHostHttps = agentHost.GetEndpoint("https");
 
 var cache = builder.AddRedis("cache");
 
@@ -22,14 +18,12 @@ var signalr = builder.ExecutionContext.IsPublishMode
 
 /* Backend */
 var backend = builder.AddProject<Projects.SupportCenter_Backend>("backend")
-    .WithEnvironment("AGENT_HOST", $"{agentHostHttps.Property(EndpointProperty.Url)}")
     .WithEnvironment("OpenAI__Key", builder.Configuration["OpenAIOptions:Key"])
     .WithEnvironment("OpenAI__Endpoint", builder.Configuration["OpenAIOptions:Endpoint"])
     .WithExternalHttpEndpoints()
     .WithReference(signalr)
     .WithReference(cache)
-    .WithReplicas(2)
-    .WaitFor(agentHost);
+    .WithReplicas(2);
 //.PublishAsDockerFile();
 //.PublishAsAzureContainerApp((infra, ca) =>
 //{

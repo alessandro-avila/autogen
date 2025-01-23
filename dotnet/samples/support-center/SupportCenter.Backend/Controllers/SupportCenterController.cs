@@ -2,8 +2,6 @@
 // SupportCenterController.cs
 
 using Microsoft.AspNetCore.Mvc;
-//using Microsoft.AutoGen.Agents.Client;
-//using Microsoft.AutoGen.Agents.Runtime;
 
 namespace SupportCenter.Backend.Controllers;
 

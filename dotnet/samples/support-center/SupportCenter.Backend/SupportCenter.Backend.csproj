@@ -9,12 +9,10 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Microsoft.AutoGen\Agents\Microsoft.AutoGen.Agents.csproj" />
+    <ProjectReference Include="..\SupportCenter.Agents\SupportCenter.Agents.csproj" >
+      <IsAspireProjectResource>false</IsAspireProjectResource>
+    </ProjectReference>
     <ProjectReference Include="..\SupportCenter.Shared\SupportCenter.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Agents\" />
-    <Folder Include="Hubs\" />
   </ItemGroup>
 
   <ItemGroup>

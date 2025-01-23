@@ -3,7 +3,7 @@
 
 using System.Collections.Concurrent;
 
-namespace SupportCenter.Backend.Hubs;
+namespace SupportCenter.Shared.Hubs;
 
 public static class SignalRConnectionsDB
 {
