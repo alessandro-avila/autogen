@@ -20,7 +20,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
-                //.AddNamedAzureSignalR("signalr"); ;
+//.AddNamedAzureSignalR("signalr"); ;
 
 builder.AddAgentWorker(builder.Configuration["AGENT_HOST"]!)
     .AddAgent<Dispatcher>("dispatcher")
@@ -29,6 +29,7 @@ builder.AddAgentWorker(builder.Configuration["AGENT_HOST"]!)
     .AddAgent<Invoice>("invoice")
     .AddAgent<QnA>("qna")
     .AddAgent<SignalRAgent>("signalr-hub");
+
 builder.Services.AddSingleton<AgentWorker>();
 builder.Services.AddSingleton<ISignalRService, SignalRService>();
 
@@ -42,10 +43,9 @@ if (builder.Environment.IsDevelopment())
         options.AddPolicy(AllowDebugOriginPolicy, builder =>
         {
             builder
-            .WithOrigins("http://localhost:3000", "http://localhost:3001") // client urls
+            .WithOrigins()
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+            .AllowAnyMethod();
         });
     });
 }
@@ -73,8 +73,21 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 app.UseRouting();
-app.UseCors(AllowDebugOriginPolicy);
+if (builder.Environment.IsDevelopment())
+{
+    app.UseCors(AllowDebugOriginPolicy);
+}
+else
+{
+    app.UseCors(AllowOriginPolicy);
+}
 app.MapControllers();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Support Center APIs v1");
+});
 
 app.MapHub<SupportCenterHub>("/supportcenterhub");
 app.Run();
